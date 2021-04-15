@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Factures</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+
+            <div class="d-flex justify-content-end p-2 ">
+                <button id="addbutton" type="button" class="btn btn-labeled btn-success m-2" data-toggle="modal" data-target="#Modal" >
+                    <span class="btn-label">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </span>
+                    Ajouter
+                </button>
+                <button id="edit" type="button" class="btn btn-labeled btn-warning m-2" data-target="#ModalEdit">
+                    <span class="btn-label">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </span>
+                    Modifier
+                </button>
+            </div>
+            <table id="factures" class="table table-striped table-bordered col-2 " style="width:100%">
+                <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Client</th>
+                    <th>Montant</th>
+                    <th>Date de Création</th>
+                    <th>Date de Réglement</th>
+                    <th>Etapes</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="Modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Créer une facture</h4>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="InputClient">Client</label>
+                            <input type="text" class="form-control" id="InputClient" aria-describedby="emailHelp" placeholder="Client">
+                        </div>
+                        <div class="form-group">
+                            <label for="InputMontantHT">Montant HT</label>
+                            <input type="number" class="form-control" id="InputMontantHT" placeholder="Montant HT">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="InputTVA">TVA</label>
+                            <input type="number" class="form-control" id="InputTVA" placeholder="TVA">
+                        </div>
+
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success float-left" id="#CreateFacture" >Créer</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="ModalEdit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Modifier la facture</h4>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="InputClientEdit">Client</label>
+                            <input type="text" class="form-control" id="InputClientEdit" aria-describedby="emailHelp" placeholder="Client">
+                        </div>
+                        <div class="form-group">
+                            <label for="InputMontantHTEdit">Montant HT</label>
+                            <input type="number" class="form-control" id="InputMontantHTEdit" placeholder="Montant HT">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="InputTVAEdit">TVA</label>
+                            <input type="number" class="form-control" id="InputTVAEdit" placeholder="TVA">
+                        </div>
+
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success float-left" id="#editFacture" >Modifier</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script>
+
+    $(document).ready(function() {
+
+
+        for (var i=1 ; i<=35;i++)
+        {
+            var numfacture = "<td>"+i+"</td>";
+            var clientFacture = "<td>"+i+"</td>";
+            var MonantFacture = "<td>"+i+"</td>";
+            var CreatFacture = "<td>"+i+"</td>";
+            var RegleFacture = "<td>"+i+"</td>";
+            var EtapesFacture = "<td>"+i+"</td>";
+
+            var tr ="<tr>"+numfacture+clientFacture+MonantFacture+CreatFacture+RegleFacture+EtapesFacture+"</tr>";
+
+            $('tbody').append(tr);
+
+        }
+
+        var table = $('#factures').DataTable();
+
+        $('#factures tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+
+
+   /* $('#example').DataTable( {
+        "ajax": "data/objects.txt",
+        "columns": [
+            { "data": "name" },
+            { "data": "position" },
+            { "data": "office" },
+            { "data": "extn" },
+            { "data": "start_date" },
+            { "data": "salary" }
+        ]
+    } );*/
+
+       /* $("tbody tr").on( "click", function() {
+            if ($(this).hasClass("selected"))
+            {
+                $('.selected').removeClass('selected');
+            }
+            else{
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass("selected");
+            }
+        });*/
+
+        $( "#add" ).on( "click", add);
+        $( "#edit" ).on( "click", edit);
+
+        function add(){
+
+        }
+        function edit(){
+            if ($(".selected")[0]){
+                $("#edit").attr("data-toggle", "modal");
+            }
+            else {
+                $("#edit").attr("data-toggle", "");
+                alert('Please select any one item in grid');
+            }
+        }
+    } );
+
+
+
+
+</script>
+</html>
