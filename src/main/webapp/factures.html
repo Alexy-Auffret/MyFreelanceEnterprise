@@ -106,11 +106,13 @@
             <!-- Modal body -->
             <div class="modal-body">
                 <form>
-                    <div class="form-group">
-                        <label for="InputClientEdit">Client</label>
-                        <input type="text" class="form-control" id="InputClientEdit" aria-describedby="emailHelp"
-                               placeholder="Client">
+                    <div class="form-group col-4">
+                        <label for="inputState">Client</label>
+                        <select id="InputClientEdit" class="form-control" >
+
+                        </select>
                     </div>
+
                     <div class="form-group">
                         <label for="InputMontantHTEdit">Montant HT</label>
                         <input type="number" class="form-control" id="InputMontantHTEdit" placeholder="Montant HT">
@@ -119,6 +121,15 @@
                     <div class="form-group">
                         <label for="InputTVAEdit">TVA</label>
                         <input type="number" class="form-control" id="InputTVAEdit" placeholder="TVA">
+                    </div>
+
+                    <div class="form-group col-4">
+                        <label for="inputState">Etat</label>
+                        <select id="inputState" class="form-control" >
+                            <option selected>En cours</option>
+                            <option selected>Payée</option>
+                            <option>Abandonnée</option>
+                        </select>
                     </div>
 
                 </form>
@@ -173,14 +184,25 @@
             ]
         });
 
-        $('#factures tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected')) {
+        $('#factures tbody').on( 'click', 'tr', function () {
+
+            var row = table.row( this ).data();
+
+
+
+            if ( $(this).hasClass('selected') ) {
                 $(this).removeClass('selected');
-            } else {
+            }
+            else {
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
+                console.log(row);
+                $("#InputClientEdit").val(row["client"]);
+                $("#InputMontantHTEdit").val(row["amount"]);
+                $("#InputTVAEdit").val(row["vat"]);
+               /* $("#inputState").val(row[3]);*/
             }
-        });
+        } );
 
         /* $("tbody tr").on( "click", function() {
              if ($(this).hasClass("selected"))
