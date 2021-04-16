@@ -96,8 +96,9 @@
                 <form>
                     <div class="form-group">
                         <label for="InputClient">Client</label>
-                        <input type="text" class="form-control" id="InputClient" aria-describedby="emailHelp"
-                               placeholder="Client">
+                        <select id="InputClient" name="Client" class="form-control browser-default custom-select">
+                        </select>
+
                     </div>
                     <div class="form-group">
                         <label for="InputMontantHT">Montant HT</label>
@@ -106,7 +107,12 @@
 
                     <div class="form-group">
                         <label for="InputTVA">TVA</label>
-                        <input type="number" class="form-control" id="InputTVA" placeholder="TVA">
+                        <select id="InputTVA" class="form-control" >
+                            <option>5.5</option>
+                            <option>10</option>
+                            <option>20</option>
+                        </select>
+
                     </div>
 
                 </form>
@@ -114,7 +120,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success float-left" id="#CreateFacture">Créer</button>
+                <button type="submit" id="CreateFacture" class="btn btn-success float-left" >Créer</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
 
@@ -137,7 +143,7 @@
                 <form>
                     <div class="form-group col-4">
                         <label for="inputState">Client</label>
-                        <select id="InputClientEdit" class="form-control" >
+                        <select id="InputClientEdit" class="form-control browser-default custom-select" >
 
                         </select>
                     </div>
@@ -149,15 +155,19 @@
 
                     <div class="form-group">
                         <label for="InputTVAEdit">TVA</label>
-                        <input type="number" class="form-control" id="InputTVAEdit" placeholder="TVA">
+                        <select id="InputTVAEdit" class="form-control" >
+                            <option>En cours</option>
+                            <option>Payée</option>
+                            <option>Abandonnée</option>
+                        </select>
                     </div>
 
                     <div class="form-group col-4">
                         <label for="inputState">Etat</label>
                         <select id="inputState" class="form-control" >
-                            <option selected>En cours</option>
-                            <option selected>Payée</option>
-                            <option>Abandonnée</option>
+                            <option>5.5</option>
+                            <option>10</option>
+                            <option>20</option>
                         </select>
                     </div>
 
@@ -166,7 +176,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success float-left" id="#editFacture">Modifier</button>
+                <button type="submit" class="btn btn-success float-left" id="editFacture">Modifier</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
 
@@ -180,23 +190,31 @@
 
     $(document).ready(function () {
 
+        let id_fact;
+        let dropdown = $('#InputClient');
+        let dropdownEdit = $('#InputClientEdit');
 
-        /*for (var i=1 ; i<=35;i++)
-        {
-            var numfacture = "<td>"+i+"</td>";
-            var clientFacture = "<td>"+i+"</td>";
-            var MonantFacture = "<td>"+i+"</td>";
-            var CreatFacture = "<td>"+i+"</td>";
-            var RegleFacture = "<td>"+i+"</td>";
-            var EtapesFacture = "<td>"+i+"</td>";
+        dropdown.empty();
+        dropdownEdit.empty();
 
-            var tr ="<tr>"+numfacture+clientFacture+MonantFacture+CreatFacture+RegleFacture+EtapesFacture+"</tr>";
+        dropdown.append('<option selected="true" disabled>Choisir un client</option>');
+        dropdown.prop('selectedIndex', 0);
 
-            $('tbody').append(tr);
+        dropdownEdit.append('<option selected="true" disabled>Choisir un client</option>');
+        dropdownEdit.prop('selectedIndex', 0);
 
-        }*/
+        const url = "http://localhost:8080/api/clients";
 
-        //var table = $('#factures').DataTable();
+        // Populate dropdown with list of provinces
+        $.getJSON(url, function (data) {
+            $.each(data, function (key, entry) {
+                dropdown.append($('<option></option>').attr('value', entry.id).text(entry.name));
+                dropdownEdit.append($('<option></option>').attr('value', entry.id).text(entry.name));
+            })
+        });
+
+
+
         var table = $('#factures').DataTable({
             "ajax": ({
                 dataType: "json",
@@ -205,7 +223,7 @@
             }),
             "columns": [
                 {"data": "id"},
-                {"data": "idClient"},
+                {"data": "client.name"},
                 {"data": "amount"},
                 {"data": "creationDate"},
                 {"data": "settlementDate"},
@@ -216,57 +234,68 @@
         $('#factures tbody').on( 'click', 'tr', function () {
 
             var row = table.row( this ).data();
-
-
-
+            console.log(row["client"]["name"]);
             if ( $(this).hasClass('selected') ) {
                 $(this).removeClass('selected');
             }
             else {
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
-                console.log(row);
-                $("#InputClientEdit").val(row["client"]);
+                id_fact = row["id"];
+
+                $("#InputClientEdit").val(row["client"]["name"]);
                 $("#InputMontantHTEdit").val(row["amount"]);
                 $("#InputTVAEdit").val(row["vat"]);
-               /* $("#inputState").val(row[3]);*/
+               $("#inputState").val(row["step"]);
             }
         } );
 
-        /* $("tbody tr").on( "click", function() {
-             if ($(this).hasClass("selected"))
-             {
-                 $('.selected').removeClass('selected');
-             }
-             else{
-                 table.$('tr.selected').removeClass('selected');
-                 $(this).addClass("selected");
-             }
-         });*/
 
-        $("#CreateFacture").on("click", addFact);
-        ("#EditFacture").on("click", editFact);
+
         $("#edit").on("click", edit);
 
-        function editFact() {
-            var arr = { City: 'Moscow', Age: 25 };
-            $.ajax({
-                url: 'Ajax.ashx',
-                type: 'POST',
-                data: JSON.stringify(arr),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                async: false,
-                success: function(msg) {
-                    alert(msg);
-                }
-            });
-        }
 
-        function addFact() {
-            var arr = { City: 'Moscow', Age: 25 };
+        $("#editFacture").on("click", function () {
+            if ($("#InputClientEdit").val()==null)
+            {
+                alert("veuillez remplir le champs client");
+            }
+            if ($("#inputState").val()==null)
+            {
+                alert("veuillez remplir le champs état");
+            }
+            else
+            {
+                var arr = {id: id_fact, idClient: $("#InputClientEdit").val(), amount: $("#InputMontantHTEdit").val(), creationDate:new Date(), vat:$("#InputTVAEdit").val(), step:$("#inputState").val() };
+                console.log("yo")
+                console.log(JSON.stringify(arr));
+
+                $.ajax({
+                    url: 'http://localhost:8080/api/updateFacture',
+                    type: 'POST',
+                    data: JSON.stringify(arr),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    async: false,
+                    success: function(msg) {
+                        alert(msg);
+                    }
+                });
+            }
+
+        });
+
+
+
+        $("#CreateFacture").on("click", function () {
+
+            var arr = { idClient: $("#InputClient").val(), amount: $("#InputMontantHT").val(), creationDate:new Date(), vat:$("#InputTVA").val()};
+
+            console.log(JSON.stringify(arr));
+
+
             $.ajax({
-                url: 'Ajax.ashx',
+                url: 'http://localhost:8080/api/createFacture',
                 type: 'POST',
                 data: JSON.stringify(arr),
                 contentType: 'application/json; charset=utf-8',
@@ -276,7 +305,8 @@
                     alert(msg);
                 }
             });
-        }
+
+        });
 
         function edit() {
             if ($(".selected")[0]) {
