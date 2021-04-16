@@ -103,11 +103,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="InputEmail">Email</label>
-                        <input type="text" class="form-control" id="InputEmail" placeholder="Email">
-                    </div>
-
-                    <div class="form-group">
                         <label for="InputTelephone">Telephone</label>
                         <input type="number" class="form-control" id="InputTelephone" placeholder="telephone">
                     </div>
@@ -117,7 +112,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success float-left" id="#CreateFacture">Créer</button>
+                <button type="submit" class="btn btn-success float-left" id="createClient">Créer</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
 
@@ -151,11 +146,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="InputEmailEdit">Email</label>
-                        <input type="text" class="form-control" id="InputEmailEdit" placeholder="email">
-                    </div>
-
-                    <div class="form-group">
                         <label for="InputTelephoneEdit">Telephone</label>
                         <input type="text" class="form-control" id="InputTelephoneEdit" placeholder="telephone">
                     </div>
@@ -165,7 +155,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success float-left" id="#editFacture">Modifier</button>
+                <button type="submit" class="btn btn-success float-left" id="editClient">Modifier</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
 
@@ -178,6 +168,7 @@
 <script>
 
     $(document).ready(function () {
+        let id_clt;
         var table = $('#clients').DataTable({
             "ajax": ({
                 dataType: "json",
@@ -196,15 +187,13 @@
         $('#client tbody').on( 'click', 'tr', function () {
 
             var row = table.row( this ).data();
-
-
-
             if ( $(this).hasClass('selected') ) {
                 $(this).removeClass('selected');
             }
             else {
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
+                id_clt = row["id"];
                 console.log(row);
                 $("#InputRaisonEdit").val(row["name"]);
                 $("#InputAdresseEdit").val(row["address"]);
@@ -212,14 +201,15 @@
             }
         } );
 
-        $("#CreateClient").on("click", addClient);
-        $("#EditClient").on("click", editClient);
-        $("#edit").on("click", edit);
+        $("#createClient").on("click", function () {
 
-        function editClient() {
-            var arr = { City: 'Moscow', Age: 25 };
+            var arr = { address: $("#InputAdresse").val(), name:$("#InputRaison").val(), phoneNumber:$("#InputTelephone").val(), active:true};
+
+            console.log(JSON.stringify(arr));
+
+
             $.ajax({
-                url: 'Ajax.ashx',
+                url: 'http://localhost:8080/api/createClient',
                 type: 'POST',
                 data: JSON.stringify(arr),
                 contentType: 'application/json; charset=utf-8',
@@ -227,24 +217,32 @@
                 async: false,
                 success: function(msg) {
                     alert(msg);
+                    $("#ModalEdit").close();
                 }
             });
-        }
 
-        function addClient() {
-            var arr = { City: 'Moscow', Age: 25 };
-            $.ajax({
-                url: 'Ajax.ashx',
-                type: 'POST',
-                data: JSON.stringify(arr),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                async: false,
-                success: function(msg) {
-                    alert(msg);
-                }
-            });
-        }
+        });
+
+        $("#edit").on("click", editClient);
+
+        $("#editClient").on("click", function () {
+                var arr = {id: id_clt, address: $("#InputAdresseEdit").val(), name:$("#InputRaisonEdit").val(), phoneNumber:$("#InputTelephoneEdit").val(), active:true };
+                console.log("edit ok")
+                console.log(JSON.stringify(arr));
+
+                $.ajax({
+                    url: 'http://localhost:8080/api/updateClient',
+                    type: 'POST',
+                    data: JSON.stringify(arr),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    async: false,
+                    success: function(msg) {
+                        alert(msg);
+                        $("#Modal").close();
+                    }
+                });
+        });
 
         function edit() {
             if ($(".selected")[0]) {
