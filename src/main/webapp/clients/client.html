@@ -6,19 +6,20 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
-            integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
-            integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="../homepage.index.html">MyFreelanceEnterprise</a>
+        <a class="navbar-brand" href="../homepage/index.html">MyFreelanceEnterprise</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -43,86 +44,217 @@
         </div>
     </div>
 </nav>
-   <div class="container my-2">
-       <h1 align="center">Liste des Clients</h1>
-       <a th:href="@{/}" class="btn btn-primary btn-sm mb-3">Ajouter un client</a>
-
-       <table border="1" class="table table-striped table-responsive-md">
-       <thead>
-       <tr>
-           <th>Id</th>
-           <th>Raison Sociale</th>
-           <th>Adresse Postale</th>
-           <th>Email</th>
-           <th>Téléphone</th>
-           <th>Action</th>
-       </tr>
-       </thead>
-
-     <!-- <tbody>
-       <tr th:each="client : ${}">
-           <td th:text="${}"></td>
-           <td th:text="${}"></td>
-           <td th:text="${}"></td>
-           <td th:text="${}"></td>
-           <td th:text="${}"></td>-->
-           <td>
-
-               <button id="addbutton" type="button" class="btn btn-labeled btn-success m-2">
+<div class="container my-2">
+    <div class="row">
+        <h1>Clients</h1>
+        <div class="d-flex justify-content-end p-2 ">
+            <button id="addbutton" type="button" class="btn btn-labeled btn-success m-2" data-toggle="modal"
+                    data-target="#Modal">
                     <span class="btn-label">
                         <i class="glyphicon glyphicon-plus"></i>
                     </span>
-                   modifier
-               </button>
-               <button id="edit" type="button" class="btn btn-labeled btn-warning m-2">
+                Ajouter
+            </button>
+            <button id="edit" type="button" class="btn btn-labeled btn-warning m-2" data-target="#ModalEdit">
                     <span class="btn-label">
                         <i class="glyphicon glyphicon-edit"></i>
                     </span>
-                   supprimer
-               </button>
-              <!-- <a th:href="@{//{id}(id=${client.id})}" class="btn btn-primary">Editer</a>
-               <a th:href="@{//{id}(id=${client.id})}" class="btn btn-danger">Supprimer</a>-->
-           </td>
-      <!-- </tr>
-       </tbody>-->
-   </table>
+                Modifier
+            </button>
+        </div>
+        <table id="clients" class="table table-striped table-bordered col-2 " style="width:100%">
+            <thead>
+            <tr>
+                <th>N°</th>
+                <th>Raison sociale</th>
+                <th>Adresse postale</th>
+                <th>Telephone</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+    </div>
+</div>
 
-   </div>
+<!-- The Modal -->
+<div class="modal" id="Modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Créer un client</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="InputRaison">Raison sociale</label>
+                        <input type="text" class="form-control" id="InputRaison" aria-describedby="emailHelp"
+                               placeholder="raison sociale">
+                    </div>
+                    <div class="form-group">
+                        <label for="InputAdresse">Adresse postale</label>
+                        <input type="text" class="form-control" id="InputAdresse" placeholder="Adresse">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="InputEmail">Email</label>
+                        <input type="text" class="form-control" id="InputEmail" placeholder="Email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="InputTelephone">Telephone</label>
+                        <input type="number" class="form-control" id="InputTelephone" placeholder="telephone">
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success float-left" id="#CreateFacture">Créer</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="ModalEdit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Modifier le client</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form>
+                    <div class="form-group col-4">
+                        <label for="inputRaison">Raison sociale</label>
+                        <select id="InputRaisonEdit" class="form-control" >
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="InputAdresseEdit">Adresse postale</label>
+                        <input type="text" class="form-control" id="InputAdresseEdit" placeholder="adresse">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="InputEmailEdit">Email</label>
+                        <input type="text" class="form-control" id="InputEmailEdit" placeholder="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="InputTelephoneEdit">Telephone</label>
+                        <input type="text" class="form-control" id="InputTelephoneEdit" placeholder="telephone">
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success float-left" id="#editFacture">Modifier</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 </body>
-
 <script>
-    fetch('http://localhost:8080/api/clients').then(response => response.json()).then(data => data.forEach(element => {
-        let table = document.getElementById("client");
-        /*let checkInput = document.createElement("input");
-        checkInput.type = "checkbox";
-        checkInput.checked = element.settlementDate != null;
-        checkInput.readOnly = true;*/
 
-        let = document.createElement("td");
-        .innerHTML = element.id;
+    $(document).ready(function () {
+        var table = $('#clients').DataTable({
+            "ajax": ({
+                dataType: "json",
+                url: "http://localhost:8080/api/clients",
+                dataSrc: ""
+            }),
+            "columns": [
+                {"data": "id"},
+                {"data": "name"},
+                {"data": "address"},
+                {"data": "phoneNumber"},
 
-        let  = document.createElement("td");
-        .innerHTML = element.;
+            ]
+        });
 
-        let = document.createElement("td");
-        .innerHTML = element.;
+        $('#client tbody').on( 'click', 'tr', function () {
 
-        let  = document.createElement("td");
-        .innerHTML = element.;
+            var row = table.row( this ).data();
 
-        table.appendChild();
-        table.appendChild();
-        table.appendChild();
-        table.appendChild();
-        table.appendChild();
-    }));
 
-   /** fetch('http://localhost:8080/api/getRevenues').then(response => response.json()).then(data => {
-        let percentage = data * 100 / 70000;
 
-        $('#amountprogress').attr('aria-valuenow', percentage).css('width', percentage + '%');
-    });**/
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+                console.log(row);
+                $("#InputRaisonEdit").val(row["name"]);
+                $("#InputAdresseEdit").val(row["address"]);
+                $("#InputTelephoneEdit").val(row["phoneNumber"]);
+            }
+        } );
+
+        $("#CreateClient").on("click", addClient);
+        $("#EditClient").on("click", editClient);
+        $("#edit").on("click", edit);
+
+        function editClient() {
+            var arr = { City: 'Moscow', Age: 25 };
+            $.ajax({
+                url: 'Ajax.ashx',
+                type: 'POST',
+                data: JSON.stringify(arr),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                async: false,
+                success: function(msg) {
+                    alert(msg);
+                }
+            });
+        }
+
+        function addClient() {
+            var arr = { City: 'Moscow', Age: 25 };
+            $.ajax({
+                url: 'Ajax.ashx',
+                type: 'POST',
+                data: JSON.stringify(arr),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                async: false,
+                success: function(msg) {
+                    alert(msg);
+                }
+            });
+        }
+
+        function edit() {
+            if ($(".selected")[0]) {
+                $("#edit").attr("data-toggle", "modal");
+            } else {
+                $("#edit").attr("data-toggle", "");
+                alert('Please select any one item in grid');
+            }
+        }
+    });
 
 </script>
 </html>
