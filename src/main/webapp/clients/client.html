@@ -2,12 +2,20 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>MyFreelanceEnterprise</title>
+    <title>Clients</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+            integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
+            integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 </head>
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="index.html">MyFreelanceEnterprise</a>
@@ -35,6 +43,7 @@
         </div>
     </div>
 </nav>
+
    <div class="container my-2">
        <h1 align="center">Liste des Clients</h1>
        <a th:href="@{/}" class="btn btn-primary btn-sm mb-3">Ajouter un client</a>
@@ -51,22 +60,70 @@
        </tr>
        </thead>
 
-      <tbody>
+     <!-- <tbody>
        <tr th:each="client : ${}">
            <td th:text="${}"></td>
            <td th:text="${}"></td>
            <td th:text="${}"></td>
            <td th:text="${}"></td>
-           <td th:text="${}"></td>
+           <td th:text="${}"></td>-->
            <td>
-               <a th:href="@{//{id}(id=${client.id})}" class="btn btn-primary">Editer</a>
-               <a th:href="@{//{id}(id=${client.id})}" class="btn btn-danger">Supprimer</a>
+
+               <button id="addbutton" type="button" class="btn btn-labeled btn-success m-2">
+                    <span class="btn-label">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </span>
+                   modifier
+               </button>
+               <button id="edit" type="button" class="btn btn-labeled btn-warning m-2">
+                    <span class="btn-label">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </span>
+                   supprimer
+               </button>
+              <!-- <a th:href="@{//{id}(id=${client.id})}" class="btn btn-primary">Editer</a>
+               <a th:href="@{//{id}(id=${client.id})}" class="btn btn-danger">Supprimer</a>-->
            </td>
-       </tr>
-       </tbody>
+      <!-- </tr>
+       </tbody>-->
    </table>
 
    </div>
 
 </body>
+
+<script>
+    fetch('http://localhost:8080/api/').then(response => response.json()).then(data => data.forEach(element => {
+        let table = document.getElementById("client");
+        /*let checkInput = document.createElement("input");
+        checkInput.type = "checkbox";
+        checkInput.checked = element.settlementDate != null;
+        checkInput.readOnly = true;*/
+
+        let = document.createElement("td");
+        .innerHTML = element.id;
+
+        let  = document.createElement("td");
+        .innerHTML = element.;
+
+        let = document.createElement("td");
+        .innerHTML = element.;
+
+        let  = document.createElement("td");
+        .innerHTML = element.;
+
+        table.appendChild();
+        table.appendChild();
+        table.appendChild();
+        table.appendChild();
+        table.appendChild();
+    }));
+
+   /** fetch('http://localhost:8080/api/getRevenues').then(response => response.json()).then(data => {
+        let percentage = data * 100 / 70000;
+
+        $('#amountprogress').attr('aria-valuenow', percentage).css('width', percentage + '%');
+    });**/
+
+</script>
 </html>
