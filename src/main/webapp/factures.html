@@ -215,11 +215,38 @@
              }
          });*/
 
-        $("#add").on("click", add);
+        $("#CreateFacture").on("click", addFact);
+        ("#EditFacture").on("click", editFact);
         $("#edit").on("click", edit);
 
-        function add() {
+        function editFact() {
+            var arr = { City: 'Moscow', Age: 25 };
+            $.ajax({
+                url: 'Ajax.ashx',
+                type: 'POST',
+                data: JSON.stringify(arr),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                async: false,
+                success: function(msg) {
+                    alert(msg);
+                }
+            });
+        }
 
+        function addFact() {
+            var arr = { City: 'Moscow', Age: 25 };
+            $.ajax({
+                url: 'Ajax.ashx',
+                type: 'POST',
+                data: JSON.stringify(arr),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                async: false,
+                success: function(msg) {
+                    alert(msg);
+                }
+            });
         }
 
         function edit() {

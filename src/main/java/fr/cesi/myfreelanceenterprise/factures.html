@@ -105,6 +105,8 @@
                     <form>
                         <div class="form-group">
                             <label for="InputClientEdit">Client</label>
+                            <!--<select id="InputClientEdit" name="locality">
+                            </select>-->
                             <input type="text" class="form-control" id="InputClientEdit" aria-describedby="emailHelp" placeholder="Client">
                         </div>
                         <div class="form-group">
@@ -178,28 +180,21 @@
         } );
 
 
-   /* $('#example').DataTable( {
-        "ajax": "data/objects.txt",
-        "columns": [
-            { "data": "name" },
-            { "data": "position" },
-            { "data": "office" },
-            { "data": "extn" },
-            { "data": "start_date" },
-            { "data": "salary" }
-        ]
-    } );*/
+        let dropdown = $('#locality-dropdown');
 
-       /* $("tbody tr").on( "click", function() {
-            if ($(this).hasClass("selected"))
-            {
-                $('.selected').removeClass('selected');
-            }
-            else{
-                table.$('tr.selected').removeClass('selected');
-                $(this).addClass("selected");
-            }
-        });*/
+        dropdown.empty();
+
+        dropdown.append('<option selected="true" disabled>Choose State/Province</option>');
+        dropdown.prop('selectedIndex', 0);
+
+        const url = 'https://api.myjson.com/bins/7xq2x';
+
+    // Populate dropdown with list of provinces
+        $.getJSON(url, function (data) {
+            $.each(data, function (key, entry) {
+                dropdown.append($('<option></option>').attr('value', entry.abbreviation).text(entry.name));
+            })
+        });
 
         $( "#add" ).on( "click", add);
         $( "#edit" ).on( "click", edit);
