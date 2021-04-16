@@ -11,6 +11,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <meta charset="UTF-8">
     <title>Factures</title>
 </head>
@@ -220,7 +221,8 @@
             "ajax": ({
                 dataType: "json",
                 url: "http://localhost:8080/api/factures",
-                dataSrc: ""
+                dataSrc: "",
+                displayFormat: 'M/D/YYYY',
             }),
             "columns": [
                 {"data": "id"},
